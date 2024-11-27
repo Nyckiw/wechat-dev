@@ -1,0 +1,12 @@
+server:
+  port: 88
+spring:
+  application:
+    name: auth-service
+  profiles:
+    active: dev
+
+#日志级别
+logging:
+  level:
+    root: info

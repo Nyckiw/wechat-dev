@@ -1,0 +1,19 @@
+server:
+  port: 66
+spring:
+  application:
+    name: main-service
+  profiles:
+    active: dev
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 192.168.6.122:8848
+#        username: nacos
+#        password: 123456
+
+
+#日志级别
+logging:
+  level:
+    root: info
