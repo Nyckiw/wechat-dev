@@ -5,6 +5,42 @@ spring:
     name: gateway
   profiles:
     active: dev
+  redis:
+    host: 192.168.6.122
+    password: 123456
+    port: 6379
+    database: 0
+  #    jedis:
+  #      pool:
+  #        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+  #        max-wait: -1      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+  #        max-idle: 10      # 连接池中的最大空闲连接
+  #        min-idle: 5       # 连接池中的最小空闲连接
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true   #动态路由 从注册中心根据微服务的名称获得目标节点的地址
+      routes: # 配置路由规则（数组/list）
+        - id: authRoute   # 每一项路由规则都有一个唯一的id编号，可以自定义
+          uri: lb://auth-service    # lb=负载均衡，会动态寻址    StripPrefix用于截掉前缀，后续更新
+          predicates:
+            - Path=/a/**,/passport/**
+        - id: fileRoute
+          uri: lb://file-service
+          predicates:
+            - Path=/f/**,/file/**,/static/**,/speech/**
+        - id: mainRoute
+          uri: lb://main-service
+          predicates:
+            - Path=/m/**,/userinfo/**,/friendRequest/**,/friendship/**,/friendCircle/**,/comment/**,/chat/**
+      globalcors:    #跨域配置，配置文件格式
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
+            allowCredentials: true
 
 
 #日志级别
