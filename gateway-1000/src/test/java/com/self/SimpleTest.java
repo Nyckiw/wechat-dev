@@ -17,6 +17,7 @@ public class SimpleTest {
     private RedisOperator redisOperator;
     @Test
     public void test01(){
-        redisOperator.set("key1","1128");
+        long limitLeftTimes = redisOperator.ttl("pppppp");
+        System.out.println(limitLeftTimes);
     }
 }
