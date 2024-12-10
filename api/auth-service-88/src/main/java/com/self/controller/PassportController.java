@@ -13,15 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vo.UserVO;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import java.util.UUID;
 
@@ -45,7 +43,7 @@ public class PassportController {
     private final UserService usersService;
 
     @PostMapping("login")
-    public GraceJSONResult login(@RequestBody RegistLoginBO registLoginBO) {
+    public GraceJSONResult login(@RequestBody @Valid RegistLoginBO registLoginBO) {
         String mobile = registLoginBO.getMobile();
         String smsCode = registLoginBO.getSmsCode();
         //1.从redis中获取验证码 校验判断是否匹配
@@ -65,6 +63,8 @@ public class PassportController {
         //5.返回用户数据给前端
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
+        userVO.setCreateTime(user.getCreatedTime());
+        userVO.setUpdateTime(user.getUpdatedTime());
         userVO.setUserToken(uToken);
         return GraceJSONResult.ok(userVO);
 
