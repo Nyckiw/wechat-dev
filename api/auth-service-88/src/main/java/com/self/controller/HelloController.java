@@ -1,5 +1,7 @@
 package com.self.controller;
 
+import com.self.mapper.UsersMapper;
+import com.self.pojo.User;
 import com.self.task.SMSTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import javax.annotation.Resource;
 public class HelloController {
     @Resource
     private SMSTask smsTask;
+    @Resource
+    private UsersMapper usersMapper;
     @GetMapping("/hello")
     public String testAuth(){
         return "auth-service hello";
@@ -29,4 +33,8 @@ public class HelloController {
         smsTask.sendSMSInTask("16788900765","9999");
         log.info("运行完成");
     }
+    @GetMapping("test/select")
+    public void testselect(){
+        User users = usersMapper.selectById("1765267954436894722");
+        System.out.println(users);}
 }

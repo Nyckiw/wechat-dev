@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.self.config.GlobalConstant.MOBILE_SMSCODE;
+import static com.self.config.BaseInfoProperties.MOBILE_SMSCODE;
 import static com.self.grace.result.ResponseStatusEnum.SMS_NEED_WAIT_ERROR;
 
 /**
