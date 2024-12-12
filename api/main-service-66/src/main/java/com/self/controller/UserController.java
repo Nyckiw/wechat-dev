@@ -26,7 +26,7 @@ public class UserController {
     private final UserService userService;
     private final RedisOperator redisOperator;
 
-    @PostMapping("")
+    @PostMapping("modify")
     public GraceJSONResult modify(@RequestBody ModifyUserBO userBO) {
         //修改用户信息
         userService.modifyUserInfo(userBO);
