@@ -1,6 +1,6 @@
 package com.self.service;
 
-import com.self.pojo.User;
+import pojo.User;
 
 /**
  * @author jcy

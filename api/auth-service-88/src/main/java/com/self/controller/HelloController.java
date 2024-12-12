@@ -1,7 +1,7 @@
 package com.self.controller;
 
 import com.self.mapper.UsersMapper;
-import com.self.pojo.User;
+import pojo.User;
 import com.self.task.SMSTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

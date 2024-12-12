@@ -2,7 +2,7 @@ package com.self.service;
 
 import com.self.enums.Sex;
 import com.self.mapper.UsersMapper;
-import com.self.pojo.User;
+import pojo.User;
 import com.self.utils.DesensitizationUtil;
 import com.self.utils.LocalDateUtils;
 import com.self.utils.SnowUtils;

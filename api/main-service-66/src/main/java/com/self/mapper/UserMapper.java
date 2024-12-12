@@ -1,8 +1,8 @@
 package com.self.mapper;
 
-import pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import pojo.User;
 
 /**
  * <p>
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-12-09
  */
 @Mapper
-public interface UsersMapper extends BaseMapper<User> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

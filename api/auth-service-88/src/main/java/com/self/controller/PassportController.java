@@ -4,7 +4,7 @@ import bo.RegistLoginBO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.self.grace.result.GraceJSONResult;
 import com.self.mapper.UsersMapper;
-import com.self.pojo.User;
+import pojo.User;
 import com.self.service.UserService;
 import com.self.task.SMSTask;
 import com.self.utils.IPUtil;
@@ -13,11 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vo.UserVO;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -41,6 +39,13 @@ public class PassportController {
     private final SMSTask smsTask;
     private final UsersMapper usersMapper;
     private final UserService usersService;
+
+    @PostMapping("logout")
+    public GraceJSONResult logout(@RequestParam String userId) {
+        //清理用户分布式会话
+        redisOperator.del(REDIS_USER_TOKEN + ":" + userId);
+        return GraceJSONResult.ok();
+    }
 
     @PostMapping("login")
     public GraceJSONResult login(@RequestBody @Valid RegistLoginBO registLoginBO) {
