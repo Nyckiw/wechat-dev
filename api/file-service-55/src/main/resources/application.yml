@@ -5,7 +5,16 @@ spring:
     name: file-service
   profiles:
     active: dev
-
+  servlet:
+    multipart:
+      max-file-size: 500MB #文件上传大小限制
+      max-request-size: 500MB #文件最大请求限制
+minio:
+  endpoint: http://192.168.6.122:9002     # MinIO服务地址
+  fileHost: http://192.168.6.122:9002     # 文件地址host
+  bucketName: wechat                  # 存储桶bucket名称
+  accessKey: hJdmN1GTfdQ2vVTNFsJa                    # 用户名
+  secretKey: BkVs9D7hNo5hOOZyv9pel4JoYDQDzZgnMD6epJ5l              # 密码
 
 #日志级别
 logging:

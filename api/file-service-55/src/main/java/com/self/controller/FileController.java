@@ -1,6 +1,11 @@
 package com.self.controller;
 
+
+import com.self.config.MinIOConfig;
+import com.self.config.MinIOUtils;
 import com.self.grace.result.GraceJSONResult;
+import io.minio.ObjectWriteResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
+import static com.self.grace.result.ResponseStatusEnum.FILE_UPLOAD_FAILD;
+
 /**
  * @author jcy
  * @version 1.0
@@ -18,10 +25,16 @@ import java.io.File;
 @RestController
 @RequestMapping("file")
 public class FileController {
-    @PostMapping("uploadFace")
-    public GraceJSONResult uploadFace(@RequestParam MultipartFile file,
-                                      String userId,
-                                      HttpServletRequest request) throws Exception {
+    private final MinIOConfig minIOConfig;
+
+    public FileController(MinIOConfig minIOConfig) {
+        this.minIOConfig = minIOConfig;
+    }
+
+    @PostMapping("uploadFace1")
+    public GraceJSONResult uploadFace1(@RequestParam MultipartFile file,
+                                       String userId,
+                                       HttpServletRequest request) throws Exception {
         String filename = file.getOriginalFilename();//文件原始路径
         String suffixName = filename.substring(filename.lastIndexOf("."));//从最后一个.开始截取
         String newFileName = userId + suffixName;//文件的新名称
@@ -40,4 +53,25 @@ public class FileController {
         return GraceJSONResult.ok();
 
     }
+
+    @PostMapping("uploadFace")
+    public GraceJSONResult uploadFace(@RequestParam MultipartFile file,
+                                      String userId,
+                                      HttpServletRequest request) throws Exception {
+        if (StringUtils.isBlank(userId)) {
+            return GraceJSONResult.errorCustom(FILE_UPLOAD_FAILD);
+        }
+        String filename = file.getOriginalFilename();//获取文件原始名称
+        if (StringUtils.isBlank(filename)) {
+            return GraceJSONResult.errorCustom(FILE_UPLOAD_FAILD);
+        }
+        filename = "face" + "_" + userId + "_" + filename;
+        MinIOUtils.uploadFile(minIOConfig.getBucketName(),
+                filename,
+                file.getInputStream());
+        String fileHost = MinIOUtils.getBasisUrl()
+                + filename;
+        return GraceJSONResult.ok(fileHost);
+    }
+
 }
