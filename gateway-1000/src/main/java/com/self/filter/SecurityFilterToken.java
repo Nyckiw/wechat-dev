@@ -58,6 +58,16 @@ public class SecurityFilterToken implements GlobalFilter, Ordered {
                 }
             }
         }
+        //3.2排除静态资源服务 static
+        String fileStart = excludeUrlProperties.getFileStart();
+        if (StringUtils.isNotBlank(fileStart)) {
+            boolean matchFileStart = antPathMatcher.matchStart(fileStart, url);
+            if (matchFileStart) {
+                //匹配上static 直接放行
+                return chain.filter(exchange);
+            }
+        }
+
         //4.代码到达此处 表示请求被拦截 需要进行校验
         log.info("当前请求的路径[{}]被拦截...", url);
 

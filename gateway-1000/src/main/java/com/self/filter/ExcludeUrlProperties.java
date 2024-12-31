@@ -18,4 +18,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "exclude")
 public class ExcludeUrlProperties {
     private List<String> urls;
+    //静态文件路径
+    private String fileStart;
 }
