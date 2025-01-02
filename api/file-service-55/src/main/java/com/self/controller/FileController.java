@@ -1,9 +1,11 @@
 package com.self.controller;
 
 
+import com.self.api.feign.UserInfoMicroServiceFeign;
 import com.self.config.MinIOConfig;
 import com.self.config.MinIOUtils;
 import com.self.grace.result.GraceJSONResult;
+import com.self.utils.JsonUtils;
 import io.minio.ObjectWriteResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import vo.UserVO;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 
@@ -22,10 +26,13 @@ import static com.self.grace.result.ResponseStatusEnum.FILE_UPLOAD_FAILD;
  * @version 1.0
  * @data 2024/12/31
  */
+
 @RestController
 @RequestMapping("file")
 public class FileController {
     private final MinIOConfig minIOConfig;
+    @Resource
+    private UserInfoMicroServiceFeign userInfoMicroServiceFeign;
 
     public FileController(MinIOConfig minIOConfig) {
         this.minIOConfig = minIOConfig;
@@ -71,7 +78,17 @@ public class FileController {
                 file.getInputStream());
         String fileHost = MinIOUtils.getBasisUrl()
                 + filename;
-        return GraceJSONResult.ok(fileHost);
+//        return GraceJSONResult.ok(fileHost);
+        /**
+         * 微服务远程调用更新用户头像到数据库 openfeign
+         * 如果前端没有保存按钮可以这么做 如果有保存提交按钮 则在前端触发
+         * 此处不需要进行微服务调用 让前端触发保存提交到后台保存
+         */
+        GraceJSONResult jsonResult = userInfoMicroServiceFeign.updateFace(userId, fileHost);
+        Object data = jsonResult.getData();
+        String json = JsonUtils.objectToJson(data);
+        UserVO userVO = JsonUtils.jsonToPojo(json, UserVO.class);
+        return GraceJSONResult.ok(userVO);
     }
 
 }

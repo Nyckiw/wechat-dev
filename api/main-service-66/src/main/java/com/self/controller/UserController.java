@@ -53,4 +53,16 @@ public class UserController {
     public GraceJSONResult get(@RequestParam String userId){
         return GraceJSONResult.ok(getUserInfo(userId,false));
     }
+    @PostMapping("updateFace")
+    public GraceJSONResult updateFace(@RequestParam String userId, @RequestParam String face){
+        ModifyUserBO userBO = new ModifyUserBO();
+        userBO.setUserId(userId);
+        userBO.setFace(face);
+
+        //修改用户信息
+        userService.modifyUserInfo(userBO);
+        //返回最新用户信息
+        UserVO userVO = getUserInfo(userBO.getUserId(), true);
+        return GraceJSONResult.ok(userVO);
+    }
 }
